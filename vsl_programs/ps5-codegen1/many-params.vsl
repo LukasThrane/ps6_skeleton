@@ -1,0 +1,28 @@
+func main(a, b, c, d, e, f, g, h) {
+    var sumPlus5, alsoSumPlus5
+    print "Inside main, the arguments are: ", a, " ", b, " ", c, " ", d, " ", e, " ", f, " ", g, " ", h
+    sumPlus5 = 5 + otherFunc(a, b, c, d, e, f, g, h)
+    print "Sum plus 5: ", sumPlus5
+    alsoSumPlus5 = otherFunc(a+1, b, c+1, d, e+1, f, g+2, h)
+    print "Also sum plus 5: ", alsoSumPlus5
+    print "At the end of main, the arguments are: ", a, " ", b, " ", c, " ", d, " ", e, " ", f, " ", g, " ", h
+}
+
+func otherFunc(a, b, c, d, e, f, g, h) {
+    var sum
+    sum = a + b + c + d
+    print "Inside otherFunc, the arguments are: ", a, " ", b, " ", c, " ", d, " ", e, " ", f, " ", g, " ", h
+    sum = sum + e + f + g + h
+    return sum
+}
+
+//TESTCASE: 1 3 5 7 9
+//Wrong number of arguments
+
+//TESTCASE: 1 3 5 7 9 11 13 15
+//Inside main, the arguments are: 1 3 5 7 9 11 13 15
+//Inside otherFunc, the arguments are: 1 3 5 7 9 11 13 15
+//Sum plus 5: 69
+//Inside otherFunc, the arguments are: 2 3 6 7 10 11 15 15
+//Also sum plus 5: 69
+//At the end of main, the arguments are: 1 3 5 7 9 11 13 15

@@ -1,0 +1,21 @@
+
+func callMe(i) {
+     print "i is now", i
+}
+
+func main(start, end) {
+    var counter
+    counter = start
+    while counter < end do {
+        callMe(counter)
+        counter = counter + 1
+    }
+
+    // Go down again using while 1 + break
+    while 1 do {
+        counter = counter - 1
+        if counter < start then
+            break
+        callMe(counter)
+    }
+}

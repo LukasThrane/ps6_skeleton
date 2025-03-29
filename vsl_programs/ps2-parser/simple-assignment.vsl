@@ -1,0 +1,12 @@
+
+func main() {
+    var localVariable // Local variable declarations can only be at the beginning of blocks
+
+    globalVariable = 10
+    localVariable = 3
+
+    print "Global:", globalVariable, "local:", localVariable
+}
+
+// Global variables can be declared after they are used
+var globalVariable

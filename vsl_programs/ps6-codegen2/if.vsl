@@ -1,0 +1,72 @@
+
+func main(a) {
+    if a < 10 then
+        print "a is less than 10"
+
+    if a > -5 then
+        print "a is more than -5"
+    else
+        print "a is less than or equal to -5"
+
+    if a == 5 then
+        print "a is equal to 5"
+
+    if !((a == 0) + (a == 4)) then {
+       print "a is neither 0 nor 4"
+    }
+
+    if a != 0 then {
+        print "a is not equal to 0"
+        if a == 6 then
+            print "a is however 6"
+        else if a == 7 then
+            print "a is however 7"
+        else if a == 10 then
+            print "a is however 10"
+        else
+            print "a is neither 0, 6, 7 or 10, but ", a
+
+        if a == 10 then {
+           print "10 is my favorite"
+        } else {
+           print "I'm not happy about it either"
+        }
+
+        print "FIN?"
+    }
+
+    print "FIN."
+}
+
+//TESTCASE: 4
+//a is less than 10
+//a is more than -5
+//a is not equal to 0
+//a is neither 0, 6, 7 or 10, but 4
+//I'm not happy about it either
+//FIN?
+//FIN.
+
+//TESTCASE: 0
+//a is less than 10
+//a is more than -5
+//FIN.
+
+//TESTCASE: 10
+//a is more than -5
+//a is neither 0 nor 4
+//a is not equal to 0
+//a is however 10
+//10 is my favorite
+//FIN?
+//FIN.
+
+//TESTCASE: -20
+//a is less than 10
+//a is less than or equal to -5
+//a is neither 0 nor 4
+//a is not equal to 0
+//a is neither 0, 6, 7 or 10, but -20
+//I'm not happy about it either
+//FIN?
+//FIN.

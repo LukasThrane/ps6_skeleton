@@ -1,0 +1,23 @@
+func main() {
+    var a
+    a = 10
+
+    while 1 == 2 do {
+        var x
+        x = 5
+        print "Unreachable!", x
+    }
+
+    while a > 5 do {
+        a = a - 1
+        print "a is now:", a
+    }
+
+    while 1 do {
+        print "Runs exactly once"
+        a = a + 20
+        break
+    }
+
+    return a
+}

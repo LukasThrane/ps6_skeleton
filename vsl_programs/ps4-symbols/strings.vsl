@@ -1,0 +1,24 @@
+var glob
+
+func a() {
+
+    print "Hei"
+    if 0 then {
+        print "Yo!"
+    }
+
+    glob = 10
+    while 1 do {
+        print "Cool"
+        if glob == 0 then {
+            print "Done!"
+            break
+        }
+        glob = glob - 1
+        print "Glob is now", glob
+    }
+
+    return 5
+
+    print "Unreachable"
+}

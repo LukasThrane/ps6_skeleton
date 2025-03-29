@@ -1,0 +1,27 @@
+
+func main(a, b) {
+    if 1 then
+        print "Always"
+
+    if 0 then
+        print "Never"
+    else
+        print "This, however!"
+
+    if a > b then {
+        print a, ">", b
+    }
+    else if a < b then {
+        print a, "<", b
+    }
+    else {
+        print a, "=", b
+    }
+
+    // Now test dangling else
+    if a then
+        if b then
+            print "a & b"
+        else
+            print "a, but not b"
+}

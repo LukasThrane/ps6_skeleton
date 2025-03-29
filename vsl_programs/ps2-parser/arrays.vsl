@@ -1,0 +1,14 @@
+
+var array[3], other[20]
+
+func sum() {
+    return array[0] + array[1] + array[2]
+}
+
+func main() {
+     array[0] = 5
+     array[1] = 1
+     array[2] = array[1]
+     other[sum()] = sum()
+     print "Should be 7:", other[7]
+}

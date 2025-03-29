@@ -1,0 +1,56 @@
+func inIf() {
+    if 2 == 2 then {
+        var x, y, z
+        print "Hello!"
+        return 5
+    }
+
+    print "Unreachable"
+    inWhile()
+    otherWhile(10)
+}
+
+func inIfElse(a) {
+
+    if a < 5 then
+        return -1
+
+    print "Reachable"
+
+    if a < 10 then {
+        return 10
+    }
+    else {
+        return 20
+    }
+
+    print "Unreachable"
+}
+
+func inWhile() {
+    var x
+    x = 10
+    while x < 20 do {
+        x = x + 1
+        if x == 15 then
+            return 1
+        print "looping", x
+    }
+    print "Still reachable"
+    return 20
+}
+
+func otherWhile(a) {
+     while a do {
+        break
+        print "Unreachable"
+    }
+
+    while 1 do {
+        return 10
+        print "Unreachable"
+    }
+
+    print "Technically not reachable"
+    return 1
+}

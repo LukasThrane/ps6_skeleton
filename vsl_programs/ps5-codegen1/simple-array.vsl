@@ -1,0 +1,11 @@
+var myArray[10]
+
+func main() {
+    myArray[1] = 5
+    print myArray[0]
+    print myArray[1]
+}
+
+//TESTCASE:
+//0
+//5

@@ -1,0 +1,17 @@
+func main(a) {
+    while 1 do {
+        print "Hello"
+        if a then
+           break
+
+        return 1
+    }
+    print "Bye!"
+}
+
+//TESTCASE: 0
+//Hello
+
+//TESTCASE: 1
+//Hello
+//Bye!

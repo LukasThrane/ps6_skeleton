@@ -1,0 +1,10 @@
+func main() {
+    var x
+
+    x = 5
+
+    return x
+
+    print "Unreachable!"
+    print "Never executed!"
+}

@@ -1,0 +1,11 @@
+func main() {
+    print "Hello ", 2, " World"
+    print "Another one"
+    {
+        print "Yet another"
+    }
+}
+
+func printNewlines() {
+    print "\n\n\n"
+}

@@ -1,0 +1,23 @@
+func main(a) {
+    if 0 then
+        print "Unreachable!"
+
+    if 1 then
+        print "Hello,"
+
+    if 1 then
+    {
+        print "World!"
+    }
+    else
+    {
+        print "Unreachable!"
+    }
+
+    if a > 10 then
+    {
+        print "Maybe"
+    }
+
+    return 0
+}

@@ -1,0 +1,10 @@
+var a, b
+
+func main()
+    return a + x + func2()
+
+func func2()
+    return array[other[5]]
+
+var array[2], other[10]
+var x

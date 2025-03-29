@@ -1,0 +1,14 @@
+func main(x) {
+    print addOne(x)
+}
+
+func addOne(x) {
+    return x + 1
+}
+
+//TESTCASE: -5
+//-4
+
+//TESTCASE: 1000
+//1001
+

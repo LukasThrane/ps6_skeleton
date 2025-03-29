@@ -1,0 +1,75 @@
+
+var pos
+var array[100]
+
+func main(value) {
+    initialize()
+    find(value)
+}
+
+// Fills the array with initial values in a pseudo-random way
+// Works by incrementing array elements until one of the elements
+func initialize() {
+    var i, j
+    var index
+
+    print "Filling up array with \"random\" values"
+
+    while 1 do {
+        i = i * 21 + i / 31 + 7
+        j = j * 16 + j / 13 + 18
+
+        index = i + j
+        if index < 0 then
+           index = 1 - index
+
+        // Turn the numbers into an index in the range [0,99]
+        index = index - (index / 100) * 100
+
+        // Increment the array at the given index, stop once a 10 is written
+        array[index] = array[index] + 1
+        if array[index] >= 10 then
+            break
+    }
+}
+
+// Starts looking for an array element with the given value, starting at "pos"
+// If a match is found, 1 is returned, and pos is the index of the match
+func nextPos(value) {
+    while pos < 100 do {
+        if array[pos] == value then
+            return 1
+        pos = pos + 1
+    }
+    return 0
+}
+
+func find(value) {
+    print "Looking for all occurances of ", value
+    pos = 0
+    while nextPos(value) do {
+        print "Found at: ", pos
+        pos = pos + 1
+    }
+    print "Done!"
+}
+
+//TESTCASE: 3
+//Filling up array with "random" values
+//Looking for all occurances of 3
+//Found at: 0
+//Found at: 2
+//Found at: 9
+//Found at: 23
+//Found at: 26
+//Found at: 36
+//Found at: 42
+//Found at: 50
+//Found at: 64
+//Found at: 71
+//Found at: 72
+//Found at: 78
+//Found at: 80
+//Found at: 87
+//Found at: 95
+//Done!

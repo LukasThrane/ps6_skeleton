@@ -1,0 +1,21 @@
+
+func main(a) {
+    if a > 5 then
+        print "Input is above 5"
+    else
+        print "Input is not above 5"
+
+    print "Bye!"
+}
+
+//TESTCASE: 7
+//Input is above 5
+//Bye!
+
+//TESTCASE: 5
+//Input is not above 5
+//Bye!
+
+//TESTCASE: -2
+//Input is not above 5
+//Bye!

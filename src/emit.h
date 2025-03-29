@@ -1,0 +1,82 @@
+#ifndef EMIT_H_
+#define EMIT_H_
+
+#define RAX "%rax"
+#define EAX "%eax" // lowest 32 bits of %rax
+#define AL "%al"   // lowest byte of %rax
+#define RBX "%rbx" // callee saved
+#define RCX "%rcx"
+#define RDX "%rdx"
+#define RSP "%rsp" // callee saved
+#define RBP "%rbp" // callee saved
+#define RSI "%rsi"
+#define RDI "%rdi"
+#define R8 "%r8"
+#define R9 "%r9"
+#define R10 "%r10"
+#define R11 "%r11"
+#define R12 "%r12" // callee saved
+#define R13 "%r13" // callee saved
+#define R14 "%r14" // callee saved
+#define R15 "%r15" // callee saved
+#define RIP "%rip"
+
+#define MEM(reg) "(" reg ")"
+#define ARRAY_MEM(array, index, stride) "(" array "," index "," stride ")"
+
+// Use the GNU extension for variadic macros with a fallback if needed
+#define DIRECTIVE(fmt, ...) printf(fmt "\n", ##__VA_ARGS__)
+#define LABEL(name, ...) printf("%s:\n", (name))
+#define EMIT(fmt, ...) printf("\t" fmt "\n", ##__VA_ARGS__)
+
+#define MOVQ(src, dst) EMIT("movq %s, %s", (src), (dst))
+#define PUSHQ(src) EMIT("pushq %s", (src))
+#define POPQ(src) EMIT("popq %s", (src))
+
+#define ADDQ(src, dst) EMIT("addq %s, %s", (src), (dst))
+#define SUBQ(src, dst) EMIT("subq %s, %s", (src), (dst))
+#define NEGQ(reg) EMIT("negq %s", (reg))
+
+#define IMULQ(src, dst) EMIT("imulq %s, %s", (src), (dst))
+#define CQO EMIT("cqo") // Sign extend RAX -> RDX:RAX
+#define IDIVQ(by) EMIT("idivq %s", (by)) // Divide RDX:RAX by "by", store result in RAX
+
+#define RET EMIT("ret")
+
+#define CMPQ(op1, op2) EMIT("cmpq %s, %s", (op1), (op2)) // Compare the two operands
+
+// SETcc instructions
+#define SETE(byte_reg) EMIT("sete %s", (byte_reg))   // Store result of op1 == op2
+#define SETNE(byte_reg) EMIT("setne %s", (byte_reg)) // Store result of op1 != op2
+#define SETG(byte_reg) EMIT("setg %s", (byte_reg))   // Store result of op2 > op1
+#define SETGE(byte_reg) EMIT("setge %s", (byte_reg)) // Store result of op2 >= op1
+#define SETL(byte_reg) EMIT("setl %s", (byte_reg))   // Store result of op2 < op1
+#define SETLE(byte_reg) EMIT("setle %s", (byte_reg)) // Store result of op2 <= op1
+
+#define MOVZBQ(byte_reg, full_reg) \
+  EMIT("movzbq %s, %s", (byte_reg), (full_reg))
+
+#define JNE(label) EMIT("jne %s", (label)) // Conditional jump (not equal)
+#define JE(label) EMIT("je %s", (label))   // Conditional jump (equal)
+#define JMP(label) EMIT("jmp %s", (label)) // Unconditional jump
+
+#define ANDQ(src, dst) EMIT("andq %s, %s", (src), (dst))
+
+#ifdef __APPLE__
+#define ASM_BSS_SECTION "__DATA, __bss"
+#define ASM_STRING_SECTION "__TEXT, __cstring"
+#define ASM_DECLARE_SYMBOLS      \
+  ".set printf, _printf      \n" \
+  ".set putchar, _putchar    \n" \
+  ".set puts, _puts          \n" \
+  ".set strtol, _strtol      \n" \
+  ".set exit, _exit          \n" \
+  ".set _main, main          \n" \
+  ".global _main"
+#else
+#define ASM_BSS_SECTION ".bss"
+#define ASM_STRING_SECTION ".rodata"
+#define ASM_DECLARE_SYMBOLS ".global main"
+#endif
+
+#endif // EMIT_H_

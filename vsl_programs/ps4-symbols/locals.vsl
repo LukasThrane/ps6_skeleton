@@ -1,0 +1,37 @@
+func main() {
+  var a, b
+
+  a = 2
+  b = 6
+
+  while a + b < 10 do {
+    a = a + 1
+
+    {
+      var tmp
+      tmp = a
+      a = b
+      b = tmp
+    }
+  }
+
+  if a < b then {
+    var tmp
+    tmp = a
+    a = b
+    b = tmp
+  }
+
+  return recursive(a)
+}
+
+func recursive(x) {
+  if x == 0 then
+    return 1
+
+  {
+    var prev
+    prev = recursive(x - 1)
+    return prev * 2 + 1
+  }
+}

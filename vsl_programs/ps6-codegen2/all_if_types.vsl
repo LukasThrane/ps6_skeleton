@@ -1,0 +1,59 @@
+
+func main() {
+    print "try:"
+    print try(-44)
+    print try(-20)
+    print try(45)
+    print try(40)
+    print try(5)
+    print try(7)
+    print try(10)
+
+    print "try2:"
+    print try2(-44)
+    print try2(-20)
+    print try2(45)
+    print try2(40)
+    print try2(5)
+    print try2(7)
+    print try2(10)
+}
+
+func try(a) {
+    if a < -20 then return 0
+    if a <= -20 then return 1
+    if a > 40 then return 2
+    if a >= 40 then return 3
+    if a == 5 then return 4
+    if a != 10 then return 5
+    return 6
+}
+
+// This function should be identical to try()
+func try2(a) {
+    if a < -20 then return 0
+    else if a <= -20 then return 1
+    else if a > 40 then return 2
+    else if a >= 40 then return 3
+    else if a == 5 then return 4
+    else if a != 10 then return 5
+    else return 6
+}
+
+//TESTCASE:
+//try:
+//0
+//1
+//2
+//3
+//4
+//5
+//6
+//try2:
+//0
+//1
+//2
+//3
+//4
+//5
+//6

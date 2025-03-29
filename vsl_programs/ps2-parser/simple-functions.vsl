@@ -1,0 +1,16 @@
+
+func main() {
+    print "Should be 7:", identity(first(second(5, 7), first(2, 9)))
+}
+
+func identity(argument) {
+    return argument
+}
+
+func first(a, b) {
+    return a
+}
+
+func second(a, b) {
+    return b
+}

@@ -1,0 +1,18 @@
+func main() {
+  var a, b
+  var c
+
+  a = 6
+  b = 8
+
+  if a > b then
+    c = 2
+  else
+    c = 6
+
+  return other(a, b, c)
+}
+
+func other(x, y, z) {
+  return x + y * 2
+}

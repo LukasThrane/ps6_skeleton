@@ -1,0 +1,27 @@
+
+func main() {
+    var a, b, c
+
+    a = 1
+    b = 4 - 1 - 1
+    c = -a * b + 4 * a * 1 + 2
+    a = a / 2 + 1
+
+    if a * a < b + c then
+        print "Yes"
+
+    if !a == 0 then
+        print "Yup"
+
+    if a <= b == b > a then
+        print "Alawys!"
+
+    if a <= b != a >= b then
+        print "a != b"
+
+    if a == b == (a != b) then
+        print "Never!"
+
+    c = (a <= b) + --(a >= b)
+    return c
+}
