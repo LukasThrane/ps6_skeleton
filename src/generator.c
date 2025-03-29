@@ -17,16 +17,6 @@ static void generate_expression(node_t* expression);
 static void generate_statement(node_t* node);
 static void generate_main(symbol_t* first);
 
-// Counter for if labels
-static int if_label_count = 0;
-
-// Counter for unique while labels
-static int while_label_count = 0;
-
-#define MAX_NESTED_LOOPS 128
-static char* loop_end_labels[MAX_NESTED_LOOPS];
-static int loop_depth = 0;
-
 // Entry point for code generation
 void generate_program(void)
 {
@@ -446,93 +436,28 @@ static void generate_return_statement(node_t* statement)
 
 static void generate_if_statement(node_t* statement)
 {
-  assert(statement->type == IF_STATEMENT);
-  
-  int current_if_label = if_label_count++;
+  // TODO (2.1):
+  // Generate code for emitting both if-then statements, and if-then-else statements.
+  // Check the number of children to determine which.
 
-  char else_label[32];
-  char endif_label[32];
-
-  snprintf(else_label, sizeof(else_label), "ELSE%d", current_if_label);
-  snprintf(endif_label, sizeof(endif_label), "ENDIF%d", current_if_label);
-
-  // Evaluate the condition expression, result in %rax
-  generate_expression(statement->children[0]);
-
-  // Compare condition result with 0
-  CMPQ("$0", RAX);
-
-  if (statement->n_children == 3)
-  {
-    // If-then-else statement
-    JE(else_label); // Jump to else block if condition is false (0)
-    
-    // Then-block
-    generate_statement(statement->children[1]);
-    JMP(endif_label); // Skip else-block after then-block is done
-    
-    // Else-block
-    LABEL(else_label);
-    generate_statement(statement->children[2]);
-    
-    // End-if label
-    LABEL(endif_label);
-  }
-  else
-  {
-    // If-then statement (no else-block)
-    JE(endif_label); // Jump past then-block if condition is false (0)
-    
-    // Then-block
-    generate_statement(statement->children[1]);
-    
-    // End-if label
-    LABEL(endif_label);
-  }
+  // You will need to define your own unique labels for this if statement,
+  // so consider using a global variable as a counter to give each label a suffix unique to this if.
 }
 
 static void generate_while_statement(node_t* statement)
 {
-  assert(statement->type == WHILE_STATEMENT);
-
-  int current_while_label = while_label_count++;
-
-  char start_label[32];
-  char end_label[32];
-
-  snprintf(start_label, sizeof(start_label), "WHILE%d", current_while_label);
-  snprintf(end_label, sizeof(end_label), "ENDWHILE%d", current_while_label);
-
-  // Push the current end-label onto the loop stack
-  assert(loop_depth < MAX_NESTED_LOOPS);
-  loop_end_labels[loop_depth++] = strdup(end_label);
-
-  LABEL(start_label);
-
-  // Evaluate the condition into %rax
-  generate_expression(statement->children[0]);
-
-  // If the condition is false (0), jump out of the loop
-  CMPQ("$0", RAX);
-  JE(end_label);
-
-  // Generate the loop body
-  generate_statement(statement->children[1]);
-
-  // Jump back to evaluate the condition again
-  JMP(start_label);
-
-  LABEL(end_label);
-
-  // Pop the current end-label off the loop stack
-  free(loop_end_labels[--loop_depth]);
+  // TODO (2.2):
+  // Implement while loops, similarily to the way if statements were generated.
+  // Remember to make label names unique, and to handle nested while loops.
 }
 
 // Leaves the currently innermost while loop using its end-label
 static void generate_break_statement()
 {
-  assert(loop_depth > 0 && "break statement not within loop");
-  JMP(loop_end_labels[loop_depth - 1]);
+  // TODO (2.3):
+  // Generate the break statement, jumping out past the end of the current innermost while loop.
+  // You can use a global variable to keep track of the current innermost call to
+  // generate_while_statement().
 }
 
 // Recursively generate the given statement node, and all sub-statements.

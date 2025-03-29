@@ -24,10 +24,9 @@
 #define MEM(reg) "(" reg ")"
 #define ARRAY_MEM(array, index, stride) "(" array "," index "," stride ")"
 
-// Use the GNU extension for variadic macros with a fallback if needed
-#define DIRECTIVE(fmt, ...) printf(fmt "\n", ##__VA_ARGS__)
-#define LABEL(name, ...) printf("%s:\n", (name))
-#define EMIT(fmt, ...) printf("\t" fmt "\n", ##__VA_ARGS__)
+#define DIRECTIVE(fmt, ...) printf(fmt "\n" __VA_OPT__(, ) __VA_ARGS__)
+#define LABEL(name, ...) printf(name ":\n" __VA_OPT__(, ) __VA_ARGS__)
+#define EMIT(fmt, ...) printf("\t" fmt "\n" __VA_OPT__(, ) __VA_ARGS__)
 
 #define MOVQ(src, dst) EMIT("movq %s, %s", (src), (dst))
 #define PUSHQ(src) EMIT("pushq %s", (src))
@@ -38,30 +37,43 @@
 #define NEGQ(reg) EMIT("negq %s", (reg))
 
 #define IMULQ(src, dst) EMIT("imulq %s, %s", (src), (dst))
-#define CQO EMIT("cqo") // Sign extend RAX -> RDX:RAX
+#define CQO EMIT("cqo");                 // Sign extend RAX -> RDX:RAX
 #define IDIVQ(by) EMIT("idivq %s", (by)) // Divide RDX:RAX by "by", store result in RAX
 
 #define RET EMIT("ret")
 
 #define CMPQ(op1, op2) EMIT("cmpq %s, %s", (op1), (op2)) // Compare the two operands
 
-// SETcc instructions
+// The SETcc-family of instructions assigns either 0 or 1 to a byte register, based on a comparison.
+// The instruction immediately before the SETcc should be a
+//   cmpq op1, op2
+// The suffix given to SET, the "cc" part of "setcc", is the "condition code".
+// It determines the kind of comparison being done.
+// If the comparison is true, 1 is stored into "byte_reg". Otherwise 0 is stored.
 #define SETE(byte_reg) EMIT("sete %s", (byte_reg))   // Store result of op1 == op2
 #define SETNE(byte_reg) EMIT("setne %s", (byte_reg)) // Store result of op1 != op2
+// NOTE: for inequality checks, the order of CMPQ's operands is the opposite of what you expect
+// The following inequalities are all for signed integer operands
 #define SETG(byte_reg) EMIT("setg %s", (byte_reg))   // Store result of op2 > op1
 #define SETGE(byte_reg) EMIT("setge %s", (byte_reg)) // Store result of op2 >= op1
 #define SETL(byte_reg) EMIT("setl %s", (byte_reg))   // Store result of op2 < op1
 #define SETLE(byte_reg) EMIT("setle %s", (byte_reg)) // Store result of op2 <= op1
 
+// Since set*-instructions assign to a byte register, we must extend the byte to fill
+// an entire 64-bit register, using movzbq (move Zero-extend Byte to Quadword).
 #define MOVZBQ(byte_reg, full_reg) \
-  EMIT("movzbq %s, %s", (byte_reg), (full_reg))
+  EMIT("movzbq %s, %s", (byte_reg), (full_reg)) // full_reg <- byte_reg
 
 #define JNE(label) EMIT("jne %s", (label)) // Conditional jump (not equal)
-#define JE(label) EMIT("je %s", (label))   // Conditional jump (equal)
 #define JMP(label) EMIT("jmp %s", (label)) // Unconditional jump
 
+// Bitwise and
 #define ANDQ(src, dst) EMIT("andq %s, %s", (src), (dst))
 
+// These directives are set based on platform,
+// allowing the compiler to work on macOS as well.
+// Section names are different,
+// and exported and imported function labels start with _
 #ifdef __APPLE__
 #define ASM_BSS_SECTION "__DATA, __bss"
 #define ASM_STRING_SECTION "__TEXT, __cstring"
