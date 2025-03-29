@@ -436,90 +436,69 @@ static void generate_return_statement(node_t* statement)
 
 static void generate_if_statement(node_t* statement)
 {
-    // Use a static counter to ensure unique labels across if statements.
-    static int if_counter = 0;
-    int current_if = if_counter++;
+  static int if_counter = 0;
+  int current_if = if_counter++;
 
-    // Evaluate the condition into %rax.
-    generate_expression(statement->children[0]);
+  generate_expression(statement->children[0]);
+  CMPQ("$0", RAX);
 
-    // Compare the result in %rax with 0.
-    CMPQ("$0", RAX);
-
-    if (statement->n_children == 3) {
-        // if-then-else statement.
-        // If condition is 0, jump to the ELSE branch.
-        EMIT("je ELSE%d", current_if);
-        // Generate code for the then-statement.
-        generate_statement(statement->children[1]);
-        // After then-statement, jump past the else-statement.
-        EMIT("jmp ENDIF%d", current_if);
-        // ELSE branch label.
-        LABEL("ELSE%d", current_if);
-        // Generate code for the else-statement.
-        generate_statement(statement->children[2]);
-        // End of if statement label.
-        LABEL("ENDIF%d", current_if);
-    } else {
-        // if-then statement.
-        // If condition is 0, jump to the end of the if statement.
-        EMIT("je ENDIF%d", current_if);
-        // Generate code for the then-statement.
-        generate_statement(statement->children[1]);
-        // End of if statement label.
-        LABEL("ENDIF%d", current_if);
-    }
+  if (statement->n_children == 3) {
+    // if-then-else statement
+    EMIT("je ELSE%d", current_if);
+    generate_statement(statement->children[1]);
+    EMIT("jmp ENDIF%d", current_if);
+    LABEL("ELSE%d", current_if);
+    generate_statement(statement->children[2]);
+    LABEL("ENDIF%d", current_if);
+  } else {
+    // jump to end of if statement if condition is 0
+    EMIT("je ENDIF%d", current_if);
+    generate_statement(statement->children[1]);
+    LABEL("ENDIF%d", current_if);
+  }
 }
 
+// define max loops and stuff
 #define MAX_LOOP_NESTING 100
 static int loop_end_labels[MAX_LOOP_NESTING];
 static int loop_depth = 0;
 
 static void generate_while_statement(node_t* statement)
 {
-    // Use a static counter for unique while loop labels.
-    static int while_counter = 0;
-    int current_while = while_counter++;
+  static int while_counter = 0;
+  int current_while = while_counter++;
 
-    // Push the current loop's end label onto the loop stack.
-    if (loop_depth >= MAX_LOOP_NESTING) {
-        fprintf(stderr, "error: too many nested loops\n");
-        exit(EXIT_FAILURE);
-    }
-    loop_end_labels[loop_depth++] = current_while;
+  // exit if too many loops
+  if (loop_depth >= MAX_LOOP_NESTING) {
+    fprintf(stderr, "generate_while_statement: too many nested loops\n");
+    exit(EXIT_FAILURE);
+  }
+  loop_end_labels[loop_depth++] = current_while;
 
-    // Label for the beginning of the while loop.
-    LABEL("WHILE%d", current_while);
+  LABEL("WHILE%d", current_while);
 
-    // Evaluate the condition into %rax.
-    generate_expression(statement->children[0]);
-    // Compare %rax with 0; if 0, jump to the end of the loop.
-    CMPQ("$0", RAX);
-    EMIT("je ENDWHILE%d", current_while);
+  generate_expression(statement->children[0]);
+  CMPQ("$0", RAX);
+  EMIT("je ENDWHILE%d", current_while);
 
-    // Generate code for the while-loop body.
-    generate_statement(statement->children[1]);
+  generate_statement(statement->children[1]);
 
-    // Jump back to the beginning to re-evaluate the condition.
-    EMIT("jmp WHILE%d", current_while);
+  EMIT("jmp WHILE%d", current_while);
+  LABEL("ENDWHILE%d", current_while);
 
-    // Label marking the end of the while loop.
-    LABEL("ENDWHILE%d", current_while);
-
-    // Pop the current loop end label from the stack.
-    loop_depth--;
+  loop_depth--;
 }
 
 // Leaves the currently innermost while loop using its end-label
 static void generate_break_statement()
 {
-    if (loop_depth <= 0) {
-        fprintf(stderr, "error: break statement not within a loop\n");
-        exit(EXIT_FAILURE);
-    }
-    // Jump to the end label of the innermost loop.
-    int current_while = loop_end_labels[loop_depth - 1];
-    EMIT("jmp ENDWHILE%d", current_while);
+  // basic logic for break
+  if (loop_depth <= 0) {
+    fprintf(stderr, "error: break statement not within a loop\n");
+    exit(EXIT_FAILURE);
+  }
+  int current_while = loop_end_labels[loop_depth - 1];
+  EMIT("jmp ENDWHILE%d", current_while);
 }
 
 // Recursively generate the given statement node, and all sub-statements.
